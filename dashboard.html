@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodConnect | All-in-One Dashboard</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-droplet text-primary"></i>
+                <h2><b>RaktSeva</b></h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#home" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#stats"><i class="fa-solid fa-chart-pie"></i> Visual Dashboard</a></li>
+                <li><a href="#search"><i class="fa-solid fa-magnifying-glass"></i> Find Blood Centres  </a></li>
+                <li><a href="#camps"><i class="fa-solid fa-tent"></i> Donation Camps</a></li>
+                <li><a href="#learn"><i class="fa-solid fa-book-medical"></i> Guidelines</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="donate-cta">
+                    <p>Willing to help?</p>
+                    <button class="btn btn-primary full-width mt-2" onclick="toggleModal('registerModal')">Register Donor</button>
+                    <button class="btn btn-outline full-width mt-2" onclick="toggleModal('loginModal')">Donor Login</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-search">
+                    <i class="fa-solid fa-search text-muted"></i>
+                    <input type="text" placeholder="Quick search donors, hospitals...">
+                </div>
+                <div class="topbar-actions">
+                    <button id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" style="background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button onclick="toggleModal('emergencyModal')" class="btn btn-danger ripple">
+                        <i class="fa-solid fa-truck-medical"></i> Emergency Request
+                    </button>
+                    <div class="notification-bell">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Container -->
+            <div class="content-container">
+                
+                <!-- 1. Hero Landing Experience -->
+                <section id="home" class="hero-section">
+                    <div class="hero-bg">
+                        <div class="blob blob-1"></div>
+                        <div class="blob blob-2"></div>
+                    </div>
+                    <div class="hero-grid">
+                        <div class="hero-text fade-in-up">
+                            <div class="badge">Real-time Donor Network</div>
+                            <h1>Give the Gift of <span>Life</span></h1>
+                            <p>An integrated dashboard for real-time blood stock management, donation camps, and matching emergency patient requests instantly.</p>
+                            <div class="hero-buttons">
+                                <a href="#search" class="btn btn-primary btn-large">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Search Blood
+                                </a>
+
+                            </div>
+                        </div>
+                        
+                        <!-- Emergency Request Action Card from V1 -->
+                        <div class="hero-card-area fade-in-left">
+                            <div id="urgentRequestContainer" class="glass-card premium-card" style="border: 2px solid var(--danger);">
+                                <div class="card-header">
+                                    <i class="fa-solid fa-heart-pulse text-danger pulse-anim"></i>
+                                    <h4 class="text-danger">Live Urgent Request</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="urgentBg" class="blood-type-big text-danger">O-</div>
+                                    <div class="request-details">
+                                        <p><strong>Patient:</strong> <span id="urgentPatient">Amit Kumar</span></p>
+                                        <p><strong>Hospital:</strong> <span id="urgentHospital">City Hospital</span>, <span id="urgentAddress">Delhi</span></p>
+                                        <p><strong>Required By:</strong> <span id="urgentTime">Today, 5:00 PM</span></p>
+                                    </div>
+                                    <button class="btn btn-danger full-width mt-2" onclick="alert('Network Alerted. Matching donor algorithm initiated.')">Accept / Assign Donor</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="section-divider">
+
+                <!-- 2. Dashboard Analytics (Charts & Stats) -->
+                <section id="stats" class="dashboard-section mt-5 scroll-reveal">
+                    <div class="page-header">
+                        <h2>System Dashboard</h2>
+                        <p class="text-muted">Real-time statistics of blood availability and donor metrics.</p>
+                    </div>
+
+                    <!-- Stat Cards -->
+                     <div class="stats-container">
+
+   
+
+   <div class="stats-grid mt-4">
+
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-info">
+            <p>Total Donors</p>
+            <h3 id="donors">0</h3>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-hospital"></i></div>
+        <div class="stat-info">
+            <p>Active Blood Banks</p>
+            <h3 id="centres">0</h3>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-globe"></i></div>
+        <div class="stat-info">
+            <p>States Covered</p>
+            <h3 id="states">0</h3>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="stat-info">
+            <p>Districts Covered</p>
+            <h3 id="districts">0</h3>
+        </div>
+    </div>
+
+</div>
+                </section>
+
+                <hr class="section-divider">
+
+                <!-- 3. Find Blood Application -->
+                <section id="search" class="search-section mt-5 scroll-reveal">
+                    <div class="page-header">
+                        <h2>Find Blood Centres </h2>
+                        <p class="text-muted">Search available stock across local blood banks.</p>
+                    </div>
+                    <div class="glass-panel mt-4">
+                       <form id="searchForm">
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label>State</label>
+                                   <select name="state" id="stateSel" required>
+    <option value="" disabled selected>Select State</option>
+
+    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+    <option value="Andhra Pradesh">Andhra Pradesh</option>
+    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+    <option value="Assam">Assam</option>
+    <option value="Bihar">Bihar</option>
+    <option value="Chandigarh">Chandigarh</option>
+    <option value="Chhattisgarh">Chhattisgarh</option>
+    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Goa">Goa</option>
+    <option value="Gujarat">Gujarat</option>
+    <option value="Haryana">Haryana</option>
+    <option value="Himachal Pradesh">Himachal Pradesh</option>
+    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+    <option value="Jharkhand">Jharkhand</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Kerala">Kerala</option>
+    <option value="Ladakh">Ladakh</option>
+    <option value="Lakshadweep">Lakshadweep</option>
+    <option value="Madhya Pradesh">Madhya Pradesh</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Manipur">Manipur</option>
+    <option value="Meghalaya">Meghalaya</option>
+    <option value="Mizoram">Mizoram</option>
+    <option value="Nagaland">Nagaland</option>
+    <option value="Odisha">Odisha</option>
+    <option value="Puducherry">Puducherry</option>
+    <option value="Punjab">Punjab</option>
+    <option value="Rajasthan">Rajasthan</option>
+    <option value="Sikkim">Sikkim</option>
+    <option value="Tamil Nadu">Tamil Nadu</option>
+    <option value="Telangana">Telangana</option>
+    <option value="Tripura">Tripura</option>
+    <option value="Uttar Pradesh">Uttar Pradesh</option>
+    <option value="Uttarakhand">Uttarakhand</option>
+    <option value="West Bengal">West Bengal</option>
+</select>
+                                </div>
+                                <div class="input-group">
+                                    <label>District</label>
+                                    <select name="district" id="districtSel" required>
+    <option value="" disabled selected>Select State First</option>
+</select>
+                                </div>
+                                <!-- Category -->
+
+                                <div class="input-group search-btn-group">
+                                    <button type="submit" class="btn btn-primary full-width btn-search">
+                                        <i class="fa-solid fa-search"></i> Search Blood centre
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="results" style="margin-top:30px;"></div>
+                    </div>
+
+                    <!-- Search Results -->
+                    <div id="searchResults" class="search-results hidden fade-in-up mt-4 glass-panel">
+                        <h3>Stock Availability Results</h3>
+                        <div class="table-responsive mt-3">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Blood Bank Name</th>
+                                        <th>Category</th>
+                                        <th>Availability Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="section-divider">
+
+                <!-- 4. Campaigns / Camps -->
+                <section id="camps" class="camps-section mt-5 scroll-reveal">
+                    <div class="page-header">
+                        <h2>Upcoming Donation Camps</h2>
+                        <p class="text-muted">Schedule and details for regional voluntary donation drives.</p>
+                    </div>
+                    <div class="camps-grid mt-4" id="campsContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <hr class="section-divider">
+
+                <!-- 5. Educational / Guidelines -->
+                <section id="learn" class="learn-section mt-5 scroll-reveal mb-5">
+                    <div class="page-header">
+                        <h2>Guidelines & Blood Compatibility</h2>
+                        <p class="text-muted">Understand donation prerequisites and universal cross-matching.</p>
+                    </div>
+                    
+                    <div class="learn-grid mt-4">
+                        <div class="info-card">
+                            <div class="info-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                            <h3>Who Can Give Blood?</h3>
+                            <ul class="check-list mt-3">
+                                <li><i class="fa-solid fa-check text-success"></i> <strong>Age:</strong> 18 to 65 years.</li>
+                                <li><i class="fa-solid fa-check text-success"></i> <strong>Weight:</strong> Minimum 45 kg.</li>
+                                <li><i class="fa-solid fa-check text-success"></i> <strong>Health:</strong> Good general health.</li>
+                                <li><i class="fa-solid fa-check text-success"></i> <strong>Hemoglobin:</strong> Minimum 12.5 g/dL.</li>
+                                <li><i class="fa-solid fa-xmark text-danger"></i> <strong>Not Eligible:</strong> Recent tattoos or specified surgeries.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="glass-panel" style="background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 100%); color: white;">
+                            <h3>Why Donate Blood?</h3>
+                            <p class="mt-3 text-light">Every two seconds, someone needs blood. Your single donation can save up to <strong>three lives</strong>.</p>
+                            <div class="motivation-quote mt-3">
+                                "Tears of a mother cannot save her child. But your blood can."
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel mt-4 mb-5">
+                        <h3>Universal Compatibility Chart</h3>
+                        <div class="table-responsive mt-3">
+                            <table class="data-table compatibility-table">
+                                <thead>
+                                    <tr>
+                                        <th>Blood Type</th>
+                                        <th>Can Donate To <i class="fa-solid fa-arrow-right text-muted"></i></th>
+                                        <th>Can Receive From <i class="fa-solid fa-arrow-left text-muted"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><span class="blood-badge type-a">A+</span></td><td>A+, AB+</td><td>A+, A-, O+, O-</td></tr>
+                                    <tr><td><span class="blood-badge type-o">O+</span></td><td>O+, A+, B+, AB+</td><td>O+, O-</td></tr>
+                                    <tr><td><span class="blood-badge type-b">B+</span></td><td>B+, AB+</td><td>B+, B-, O+, O-</td></tr>
+                                    <tr><td><span class="blood-badge type-ab">AB+</span></td><td>AB+ <em>(Universal Recipient)</em></td><td><strong>Everyone</strong></td></tr>
+                                    <tr><td><span class="blood-badge type-a">A-</span></td><td>A+, A-, AB+, AB-</td><td>A-, O-</td></tr>
+                                    <tr><td><span class="blood-badge type-o">O-</span></td><td><strong>Everyone</strong> <em>(Universal Donor)</em></td><td>O-</td></tr>
+                                    <tr><td><span class="blood-badge type-b">B-</span></td><td>B+, B-, AB+, AB-</td><td>B-, O-</td></tr>
+                                    <tr><td><span class="blood-badge type-ab">AB-</span></td><td>AB+, AB-</td><td>AB-, A-, B-, O-</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="text-center text-muted" style="padding: 2rem 0; font-size: 0.9rem;">
+                    &copy; 2026 BloodConnect Dashboard. All Rights Reserved.
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Emergency Request Form -->
+    <div class="modal" id="emergencyModal">
+        <div class="modal-overlay" onclick="toggleModal('emergencyModal')"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="background-color: #fef2f2; border-bottom-color: #fca5a5;">
+                <h3 class="text-danger"><i class="fa-solid fa-truck-medical"></i> Emergency Blood Request</h3>
+                <button class="close-btn" onclick="toggleModal('emergencyModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="emergencyForm" onsubmit="handleEmergencyRequest(event)">
+                    <div class="form-grid-2">
+                        <div class="input-group">
+                            <label>Patient Name</label>
+                            <input type="text" id="emPatient" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Required Blood Group</label>
+                            <select id="emBg" required>
+                                <option value="" disabled selected>Select</option>
+                                <option>A+</option><option>A-</option>
+                                <option>B+</option><option>B-</option>
+                                <option>O+</option><option>O-</option>
+                                <option>AB+</option><option>AB-</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Hospital Name</label>
+                            <input type="text" id="emHospital" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Required By Time</label>
+                            <input type="text" id="emTime" required>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        <label>Complete Address</label>
+                        <input type="text" id="emAddress" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-large full-width mt-4">Broadcast Emergency Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login -->
+    <div class="modal" id="loginModal">
+        <div class="modal-overlay" onclick="toggleModal('loginModal')"></div>
+        <div class="modal-content">
+            <div class="modal-header"><h3>Donor Login</h3><button class="close-btn" onclick="toggleModal('loginModal')"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <div class="input-group mb-3"><label>Email / Phone</label><input type="text" required></div>
+                    <div class="input-group"><label>Password</label><input type="password" required></div>
+                    <button type="submit" class="btn btn-primary full-width mt-3">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register -->
+    <div class="modal" id="registerModal">
+        <div class="modal-overlay" onclick="toggleModal('registerModal')"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header"><h3>Donor Registration</h3><button class="close-btn" onclick="toggleModal('registerModal')"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="modal-body">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-grid-2">
+                        <div class="input-group"><label>Full Name</label><input type="text" required></div>
+                        <div class="input-group">
+                            <label>Blood Group</label>
+                            <select required>
+                                <option value="" disabled selected>Select</option>
+                                <option>A+</option><option>B+</option><option>O+</option><option>O-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width mt-3">Complete Registration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 💬 Chatbot (NOW OUTSIDE MODAL) -->
+<div id="chatBubble" onclick="toggleChat()">
+  💬 Need help? I got you 💉
+</div>
+
+<div id="chatWindow" class="hidden">
+  <div class="chat-header">
+    <span>AI Blood Assistant</span>
+    <button onclick="toggleChat()">✖</button>
+  </div>
+
+  <div id="chatMessages" class="chat-messages">
+    <div class="bot-msg">Hi! I can help with blood queries 🚑</div>
+  </div>
+
+  <div class="chat-input">
+    <input id="aiInput" placeholder="Ask something..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>

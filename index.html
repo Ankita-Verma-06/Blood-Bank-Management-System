@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RaktSeva – Blood Bank Management System | India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ================================================
+       CSS VARIABLES & RESET
+    ================================================ */
+    :root {
+      --red:        #C8102E;
+      --red-dark:   #9B0A22;
+      --red-light:  #eca2b0;
+      --red-muted:  #F9E5E8;
+      --white:      #FFFFFF;
+      --off-white:  #FAF7F7;
+      --gray-50:    #F5F5F5;
+      --gray-100:   #EBEBEB;
+      --gray-400:   #9E9E9E;
+      --gray-700:   #424242;
+      --dark:       #1A0A0D;
+      --shadow-sm:  0 2px 8px rgba(200,16,46,.10);
+      --shadow-md:  0 6px 24px rgba(200,16,46,.14);
+      --shadow-lg:  0 16px 48px rgba(200,16,46,.18);
+      --r:          14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--gray-700);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ================================================
+       UTILITY
+    ================================================ */
+    .container { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+    .section-tag {
+      display: inline-block;
+      background: var(--red-muted);
+      color: var(--red);
+      font-weight: 600;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.18;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--gray-400);
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      transition: all .25s ease;
+    }
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,.6);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,.12); border-color: var(--white); }
+    .btn-red-outline {
+      background: transparent;
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+    .btn-red-outline:hover { background: var(--red); color: var(--white); }
+
+    /* ================================================
+       NAVBAR
+    ================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      transition: background .3s, box-shadow .3s;
+    }
+    nav.scrolled {
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 2px 20px rgba(0,0,0,.08);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.35rem;
+      color: var(--white);
+      transition: color .3s;
+    }
+    nav.scrolled .logo { color: var(--dark); }
+    .logo-drop {
+      width: 36px; height: 36px;
+      background: var(--red);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-drop span {
+      transform: rotate(45deg);
+      color: var(--white);
+      font-size: .85rem;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .nav-links a {
+      font-weight: 500;
+      font-size: .9rem;
+      color: rgba(255,255,255,.85);
+      transition: color .2s;
+    }
+    nav.scrolled .nav-links a { color: var(--gray-700); }
+    .nav-links a:hover { color: var(--red) !important; }
+    .nav-cta {
+      background: var(--red);
+      color: var(--white) !important;
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-weight: 600 !important;
+    }
+    nav.scrolled .nav-cta { color: var(--white) !important; }
+    .nav-cta:hover { background: var(--red-dark); color: var(--white) !important; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: background .3s;
+    }
+    nav.scrolled .hamburger span { background: var(--dark); }
+
+    /* ================================================
+       HERO
+    ================================================ */
+    #hero {
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(26,10,13,.92) 0%, rgba(155,10,34,.80) 55%, rgba(200,16,46,.65) 100%),
+        url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      padding-top: 68px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative circles */
+    #hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.05);
+      top: -200px; right: -200px;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.07);
+      bottom: -150px; left: -150px;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      animation: fadeUp .9s ease both;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #FFB3BE;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-tag i { color: var(--red-light); }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 6vw, 4.8rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.08;
+      margin-bottom: 22px;
+    }
+    .hero-title .accent { color: #FF8FA0; }
+    .hero-sub {
+      font-size: 1.12rem;
+      color: rgba(255,255,255,.78);
+      max-width: 560px;
+      margin-bottom: 38px;
+      line-height: 1.7;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 52px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { }
+    .hero-stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .hero-stat-label {
+      font-size: .8rem;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    /* Blood drop floating decoration */
+    .hero-decoration {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 2;
+    }
+    .drop {
+      width: 60px; height: 70px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      backdrop-filter: blur(8px);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex; align-items: center; justify-content: center;
+      animation: float 3s ease-in-out infinite;
+    }
+    .drop:nth-child(2) { animation-delay: .6s; width: 80px; height: 92px; }
+    .drop:nth-child(3) { animation-delay: 1.2s; width: 50px; height: 58px; }
+    .drop i { transform: rotate(45deg); color: rgba(255,255,255,.5); font-size: .9rem; }
+
+    @keyframes float {
+      0%,100% { transform: rotate(-45deg) translateY(0); }
+      50% { transform: rotate(-45deg) translateY(-10px); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================================================
+       MARQUEE STRIP
+    ================================================ */
+    .strip {
+      background: var(--red);
+      padding: 12px 0;
+      overflow: hidden;
+    }
+    .strip-inner {
+      display: flex;
+      gap: 60px;
+      animation: marquee 20s linear infinite;
+      white-space: nowrap;
+    }
+    .strip-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,.85);
+      font-size: .85rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .strip-item i { color: #FFB3BE; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ================================================
+       ABOUT SECTION
+    ================================================ */
+    #about {
+      padding: 100px 0;
+      background: var(--white);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .about-image-wrap {
+      position: relative;
+    }
+    .about-image-main {
+      border-radius: 20px;
+      height: 480px;
+      object-fit: cover;
+      width: 100%;
+      background: linear-gradient(135deg, var(--red-muted), #ffdde1);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .about-image-main img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 20px;
+    }
+    .about-badge {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      background: var(--red);
+      color: var(--white);
+      padding: 20px 24px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .about-badge-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .about-badge-txt { font-size: .78rem; opacity: .85; margin-top: 4px; }
+    .about-dot {
+      position: absolute;
+      top: -12px; left: -12px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--red-muted);
+    }
+    .about-list { margin: 24px 0; }
+    .about-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      font-size: .97rem;
+    }
+    .about-list li i {
+      color: var(--red);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .about-info-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 28px;
+    }
+    .info-card {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 16px;
+      border-left: 3px solid var(--red);
+    }
+    .info-card-title {
+      font-weight: 600;
+      font-size: .85rem;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .info-card-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* ================================================
+       FEATURES
+    ================================================ */
+    #features {
+      padding: 100px 0;
+      background: var(--off-white);
+    }
+    .features-header { text-align: center; }
+    .features-header .section-sub { margin: 0 auto 48px; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s ease;
+    }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .feature-card:hover::after { transform: scaleX(1); }
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: var(--red-muted);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon i { color: var(--red); font-size: 1.3rem; }
+    .feature-card h3 {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .feature-card p { font-size: .9rem; color: var(--gray-400); line-height: 1.6; }
+
+    /* ================================================
+       SEARCH SECTION
+    ================================================ */
+    #search {
+      padding: 100px 0;
+      background: var(--white);
+    }
+    .search-inner {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--red-dark) 100%);
+      border-radius: 24px;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .search-inner::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      top: -100px; right: -80px;
+    }
+    .search-inner .section-title { color: var(--white); }
+    .search-inner .section-sub { color: rgba(255,255,255,.6); }
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 14px;
+      align-items: end;
+    }
+    .form-group label {
+      display: block;
+      color: rgba(255,255,255,.7);
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .form-group select,
+    .form-group input {
+      width: 100%;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: var(--white);
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border .2s, background .2s;
+      appearance: none;
+    }
+    .form-group select option { background: var(--dark); }
+    .form-group select:focus,
+    .form-group input:focus {
+      border-color: var(--red-light);
+      background: rgba(255,255,255,.15);
+    }
+    .search-results { margin-top: 36px; }
+    .search-results-title {
+      color: rgba(255,255,255,.6);
+      font-size: .85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 16px;
+    }
+    .result-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .result-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+      transition: background .2s;
+    }
+    .result-card:hover { background: rgba(255,255,255,.13); }
+    .result-card-name {
+      font-weight: 700;
+      color: var(--white);
+      font-size: .98rem;
+      margin-bottom: 6px;
+    }
+    .result-card-addr {
+      font-size: .82rem;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .blood-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .blood-tag {
+      background: var(--red);
+      color: var(--white);
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+    .blood-tag.low { background: rgba(255,255,255,.15); color: rgba(255,255,255,.6); }
+    .result-contact {
+      margin-top: 12px;
+      font-size: .82rem;
+      color: rgba(255,255,255,.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ================================================
+       STATS
+    ================================================ */
+    #stats {
+      padding: 80px 0;
+      background: var(--red);
+      position: relative;
+      overflow: hidden;
+    }
+    #stats::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.08);
+      top: -200px; left: -150px;
+    }
+    #stats::after {
+      content: '';
+      position: absolute;
+      width: 350px; height: 350px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.06);
+      bottom: -100px; right: -80px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-box {
+      text-align: center;
+      padding: 36px 20px;
+      background: rgba(255,255,255,.1);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.15);
+      backdrop-filter: blur(6px);
+      transition: background .25s, transform .25s;
+    }
+    .stat-box:hover { background: rgba(255,255,255,.16); transform: translateY(-4px); }
+    .stat-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,.15);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon i { color: var(--white); font-size: 1.2rem; }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .82rem;
+      color: rgba(255,255,255,.65);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    /* ================================================
+       WHY DONATE
+    ================================================ */
+    #why {
+      padding: 100px 0;
+      background: var(--off-white);
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .why-benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .why-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .25s;
+    }
+    .why-card:hover { box-shadow: var(--shadow-md); }
+    .why-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      background: var(--red-muted);
+    }
+    .why-card-icon i { color: var(--red); font-size: 1.1rem; }
+    .why-card h4 {
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .why-card p { font-size: .84rem; color: var(--gray-400); }
+    .why-quote {
+      background: var(--red);
+      border-radius: 20px;
+      padding: 40px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .why-quote::before {
+      content: '"';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 14rem;
+      color: rgba(255,255,255,.06);
+      top: -40px; left: 10px;
+      line-height: 1;
+    }
+    .why-quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .why-quote-steps { position: relative; }
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: .8rem;
+    }
+    .step-text { font-size: .9rem; color: rgba(255,255,255,.8); line-height: 1.5; }
+
+    /* ================================================
+       BLOOD GROUPS GUIDE
+    ================================================ */
+    #blood-guide {
+      padding: 100px 0;
+      background: var(--white);
+    }
+    .bg-header { text-align: center; margin-bottom: 48px; }
+    .bg-header .section-sub { margin: 0 auto; }
+    .bg-table-wrap {
+      overflow-x: auto;
+    }
+    .bg-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+    .bg-table th {
+      background: var(--red);
+      color: var(--white);
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .bg-table th:first-child { border-radius: 10px 0 0 0; }
+    .bg-table th:last-child { border-radius: 0 10px 0 0; }
+    .bg-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+    }
+    .bg-table tr:last-child td { border-bottom: none; }
+    .bg-table tr:hover td { background: var(--red-muted); }
+    .bg-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--white);
+      font-weight: 700;
+      font-size: .85rem;
+    }
+
+    /* ================================================
+       CTA
+    ================================================ */
+    #cta {
+      padding: 100px 0;
+      background:
+        linear-gradient(135deg, rgba(26,10,13,.94) 0%, rgba(155,10,34,.85) 100%),
+        url('https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1600&q=80') center/cover no-repeat;
+      text-align: center;
+    }
+    .cta-content { max-width: 680px; margin: 0 auto; }
+    .cta-content .section-title { color: var(--white); }
+    .cta-content .section-sub { color: rgba(255,255,255,.65); margin: 0 auto 40px; }
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-stats {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .cta-stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .cta-stat-label {
+      font-size: .78rem;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    /* ================================================
+       FOOTER
+    ================================================ */
+    footer {
+      background: var(--dark);
+      padding: 72px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-brand .logo { margin-bottom: 16px; }
+    .footer-desc {
+      font-size: .88rem;
+      color: rgba(255,255,255,.4);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.5);
+      transition: background .2s, color .2s;
+    }
+    .social-link:hover { background: var(--red); color: var(--white); }
+    .footer-col h4 {
+      font-weight: 600;
+      font-size: .85rem;
+      color: rgba(255,255,255,.9);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 20px;
+    }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      font-size: .88rem;
+      color: rgba(255,255,255,.4);
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--red-light); }
+    .footer-contact li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      font-size: .88rem;
+      color: rgba(255,255,255,.4);
+    }
+    .footer-contact li i { color: var(--red); margin-top: 2px; flex-shrink: 0; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p {
+      font-size: .82rem;
+      color: rgba(255,255,255,.25);
+    }
+    .footer-bottom a { color: var(--red-light); }
+
+    /* ================================================
+       EMERGENCY BANNER
+    ================================================ */
+    .emergency-banner {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 999;
+      background: var(--red);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: .9rem;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .emergency-banner:hover { background: var(--red-dark); transform: scale(1.03); }
+    .emergency-banner i { font-size: 1rem; }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(200,16,46,.6); }
+      50%      { box-shadow: 0 0 0 10px rgba(200,16,46,0); }
+    }
+
+    /* ================================================
+       RESPONSIVE
+    ================================================ */
+    @media (max-width: 960px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-image-wrap { max-width: 480px; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .result-cards { grid-template-columns: 1fr 1fr; }
+      .search-form { grid-template-columns: 1fr 1fr; }
+      .search-form .btn { grid-column: 1/-1; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero-decoration { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .result-cards { grid-template-columns: 1fr; }
+      .search-form { grid-template-columns: 1fr; }
+      .about-info-cards { grid-template-columns: 1fr; }
+      .why-benefits { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .search-inner { padding: 32px 24px; }
+      .hero-btns { flex-direction: column; }
+      .hero-btns .btn { justify-content: center; }
+      .cta-stats { gap: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================
+     NAVIGATION
+================================================ -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-drop"><span><i class="fas fa-tint"></i></span></div>
+        RaktSeva
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#search">Find Blood</a></li>
+        <li><a href="#why">Why Donate</a></li>
+        <li><a href="#cta" class="nav-cta"><i class="fas fa-heart"></i> Donate Now</a></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ================================================
+     HERO
+================================================ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <i class="fas fa-circle"></i>
+        India's Blood Centre directories
+      </div>
+      <h1 class="hero-title">
+        Save Lives with<br /><span class="accent">Every Drop</span>
+      </h1>
+      <p class="hero-sub">
+       <b> Everyday around 12000 people in India die due to the sheer lack of donated blood in India.</b> <br><br>
+        India needs over 14 million units of blood every year. One donation can save up to three lives. Join millions of heroes who give the gift of life across every state in India.
+      </p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn btn-primary"><i class="fas fa-hand-holding-heart"></i> Donate Blood</a>
+        <a href="#search" class="btn btn-outline"><i class="fas fa-search-location"></i> Request Blood</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val">14M+</div>
+          <div class="hero-stat-label">Units needed / year</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">2,760+</div>
+          <div class="hero-stat-label">Blood banks in India</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">3 Lives</div>
+          <div class="hero-stat-label">Saved per donation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Floating drop decorations -->
+  <div class="hero-decoration">
+    <div class="drop"><i class="fas fa-tint"></i></div>
+    <div class="drop"><i class="fas fa-heartbeat"></i></div>
+    <div class="drop"><i class="fas fa-plus"></i></div>
+  </div>
+</section>
+
+<!-- ================================================
+     MARQUEE STRIP
+================================================ -->
+<div class="strip" role="marquee" aria-label="Awareness messages">
+  <div class="strip-inner" id="strip-inner">
+    <span class="strip-item"><i class="fas fa-tint"></i> Blood cannot be manufactured — only donated</span>
+    <span class="strip-item"><i class="fas fa-heartbeat"></i> Every 2 seconds someone in India needs blood</span>
+    <span class="strip-item"><i class="fas fa-users"></i> Only 1% of India's population donates blood</span>
+    <span class="strip-item"><i class="fas fa-calendar-check"></i> Donate once every 3 months — safe &amp; healthy</span>
+    <span class="strip-item"><i class="fas fa-shield-alt"></i> Donating blood is completely safe &amp; takes only 30 minutes</span>
+    <span class="strip-item"><i class="fas fa-hospital"></i> Blood is needed in trauma, cancer, surgery, and childbirth</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="strip-item"><i class="fas fa-tint"></i> Blood cannot be manufactured — only donated</span>
+    <span class="strip-item"><i class="fas fa-heartbeat"></i> Every 2 seconds someone in India needs blood</span>
+    <span class="strip-item"><i class="fas fa-users"></i> Only 1% of India's population donates blood</span>
+    <span class="strip-item"><i class="fas fa-calendar-check"></i> Donate once every 3 months — safe &amp; healthy</span>
+    <span class="strip-item"><i class="fas fa-shield-alt"></i> Donating blood is completely safe &amp; takes only 30 minutes</span>
+    <span class="strip-item"><i class="fas fa-hospital"></i> Blood is needed in trauma, cancer, surgery, and childbirth</span>
+  </div>
+</div>
+
+<!-- ================================================
+     ABOUT
+================================================ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <!-- Image side -->
+      <div class="about-image-wrap">
+        <div class="about-dot"></div>
+        <div class="about-image-main">
+          <img
+            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+            alt="Blood donation in India"
+            loading="lazy"
+          />
+        </div>
+        <div class="about-badge">
+          <div class="about-badge-num">14M</div>
+          <div class="about-badge-txt">Units needed<br/>every year in India</div>
+        </div>
+      </div>
+      <!-- Text side -->
+      <div>
+        <div class="section-tag">About Blood Donation</div>
+        <h2 class="section-title">Why India Urgently Needs Blood Donors</h2>
+        <p>
+          India collects approximately 11 million units of blood annually, falling short of the 14 million units required. This deficit is most acute during natural disasters, road accidents, and for patients with conditions like thalassaemia and cancer.
+        </p>
+        <ul class="about-list">
+          <li><i class="fas fa-check-circle"></i> <span>You must be 18–65 years old and weigh at least 50 kg</span></li>
+          <li><i class="fas fa-check-circle"></i> <span>Men can donate every 3 months; women every 4 months</span></li>
+          <li><i class="fas fa-check-circle"></i> <span>The process is sterile — new disposable needles are used every time</span></li>
+          <li><i class="fas fa-check-circle"></i> <span>Your body replenishes donated blood within 24–48 hours</span></li>
+          <li><i class="fas fa-check-circle"></i> <span>Blood is separated into red cells, plasma, and platelets — helping multiple patients</span></li>
+          <li><i class="fas fa-check-circle"></i> <span>Voluntary, non-remunerated donation is the safest form of blood supply</span></li>
+        </ul>
+        <div class="about-info-cards">
+          <div class="info-card">
+            <div class="info-card-title">Annual Blood Need</div>
+            <div class="info-card-val">14 Million Units</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Current Shortfall</div>
+            <div class="info-card-val">~3 Million Units</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Active Blood Banks</div>
+            <div class="info-card-val">2,760+</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Voluntary Donors</div>
+            <div class="info-card-val">Only 1% Donate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     FEATURES
+================================================ -->
+<section id="features">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-tag">Platform Features</div>
+      <h2 class="section-title">Everything You Need in One Place</h2>
+      <p class="section-sub">RaktSeva's Blood Bank Management System streamlines blood donation and requests across India with real-time data and a robust network.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-user-plus"></i></div>
+        <h3>Donor Registration</h3>
+        <p>Register as a blood donor in under 2 minutes. Your profile is matched with nearby patients in need, alerting you whenever your blood group is urgently required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-hand-holding-medical"></i></div>
+        <h3>Blood Request System</h3>
+        <p>Patients, hospitals, and caregivers can raise urgent blood requests specifying the blood group, quantity, and hospital. Matched donors are notified instantly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-database"></i></div>
+        <h3>Real-time Blood Availability</h3>
+        <p>Live stock tracking across registered blood banks. Know exactly which blood groups are available and in which city before you make a trip.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <h3>Nearby Blood Centers</h3>
+        <p>Find licensed blood banks and donation camps nearest to you using GPS. Filter by district, state, and blood group with a single search.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-bell"></i></div>
+        <h3>Emergency Alerts</h3>
+        <p>Critical shortage alerts are pushed via SMS and app notifications to all eligible donors in the vicinity. No critical patient goes unserved.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-file-medical-alt"></i></div>
+        <h3>Donation History &amp; Reports</h3>
+        <p>Track your full donation history, download health certificates, and view your haemoglobin records. Stay motivated with your impact score.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     SEARCH / FIND BLOOD CENTERS
+================================================ -->
+<section id="search">
+  <div class="container">
+    <div class="search-inner">
+      <div class="section-tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)">Find Blood</div>
+      <h2 class="section-title">Search Blood Centers Near You</h2>
+      <p class="section-sub">Search by state, district, and blood group to find available blood banks and donors across India.</p>
+      <div class="search-form">
+        <div class="form-group">
+          <label for="state-select">State</label>
+          <select id="state-select">
+            <option value="">Select State</option>
+            <option>Maharashtra</option>
+            <option>Delhi</option>
+            <option>Karnataka</option>
+            <option>Tamil Nadu</option>
+            <option>West Bengal</option>
+            <option>Uttar Pradesh</option>
+            <option>Gujarat</option>
+            <option>Punjab</option>
+            <option>Rajasthan</option>
+            <option>Telangana</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="district-select">District</label>
+          <select id="district-select">
+            <option value="">Select District</option>
+            <option>Mumbai</option>
+            <option>Pune</option>
+            <option>New Delhi</option>
+            <option>Bengaluru</option>
+            <option>Chennai</option>
+            <option>Kolkata</option>
+            <option>Lucknow</option>
+            <option>Ahmedabad</option>
+            <option>Ludhiana</option>
+            <option>Jaipur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="blood-select">Blood Group</label>
+          <select id="blood-select">
+            <option value="">Any Blood Group</option>
+            <option>A+</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B-</option>
+            <option>AB+</option>
+            <option>AB-</option>
+            <option>O+</option>
+            <option>O-</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="showResults()">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+
+      <!-- Sample Results -->
+      <div class="search-results" id="results-section" style="display:none;">
+        <div class="search-results-title"><i class="fas fa-map-pin"></i> &nbsp;Showing 3 results near you</div>
+        <div class="result-cards">
+          <div class="result-card">
+            <div class="result-card-name">King Edward Memorial Hospital Blood Bank</div>
+            <div class="result-card-addr"><i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,.4)"></i> Acharya Donde Marg, Parel, Mumbai – 400012</div>
+            <div class="blood-tags">
+              <span class="blood-tag">A+</span>
+              <span class="blood-tag">B+</span>
+              <span class="blood-tag">O+</span>
+              <span class="blood-tag low">AB-</span>
+              <span class="blood-tag low">B-</span>
+            </div>
+            <div class="result-contact"><i class="fas fa-phone"></i> +91 22 2410 7000</div>
+          </div>
+          <div class="result-card">
+            <div class="result-card-name">Tata Memorial Centre – Blood Bank</div>
+            <div class="result-card-addr"><i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,.4)"></i> Dr. Ernest Borges Road, Parel, Mumbai – 400012</div>
+            <div class="blood-tags">
+              <span class="blood-tag">O+</span>
+              <span class="blood-tag">O-</span>
+              <span class="blood-tag">A+</span>
+              <span class="blood-tag low">AB+</span>
+            </div>
+            <div class="result-contact"><i class="fas fa-phone"></i> +91 22 2417 7000</div>
+          </div>
+          <div class="result-card">
+            <div class="result-card-name">Lilavati Hospital Blood Centre</div>
+            <div class="result-card-addr"><i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,.4)"></i> A-791, Bandra Reclamation, Bandra West, Mumbai – 400050</div>
+            <div class="blood-tags">
+              <span class="blood-tag">B+</span>
+              <span class="blood-tag">B-</span>
+              <span class="blood-tag">AB+</span>
+              <span class="blood-tag">A-</span>
+              <span class="blood-tag low">O-</span>
+            </div>
+            <div class="result-contact"><i class="fas fa-phone"></i> +91 22 2675 1000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     STATISTICS
+================================================ -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-val" data-target="85420">0</div>
+        <div class="stat-label">Registered Donors</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-hospital"></i></div>
+        <div class="stat-val" data-target="2760">0</div>
+        <div class="stat-label">Blood Banks in India</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-tint"></i></div>
+        <div class="stat-val" data-target="12300">0</div>
+        <div class="stat-label">Units Available Now</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-heart"></i></div>
+        <div class="stat-val" data-target="47000">0</div>
+        <div class="stat-label">Lives Saved</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     WHY DONATE
+================================================ -->
+<section id="why">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <div class="section-tag">Why Donate</div>
+        <h2 class="section-title">Benefits Beyond the Donation Chair</h2>
+        <h2>According to The Lancet Journal, India has the world’s biggest blood shortage, with a total shortfall of 41 million units and demand outstripping supply by over 400 percent.</h2><br><br>
+        <p class="section-sub">Donating blood is good for the recipient — and surprisingly good for you too. Here's why thousands of Indians donate regularly.</p>
+        <div class="why-benefits">
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-heartbeat"></i></div>
+            <h4>Reduces Heart Risk</h4>
+            <p>Regular donation lowers iron levels and reduces the risk of heart disease and stroke.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-vial"></i></div>
+            <h4>Free Health Check</h4>
+            <p>Every donation includes a free haemoglobin, BP, pulse, and blood group check by trained staff.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-recycle"></i></div>
+            <h4>Stimulates New Blood Cells</h4>
+            <p>Donating triggers your bone marrow to produce fresh blood cells, keeping your system healthy.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-smile-beam"></i></div>
+            <h4>Emotional Fulfilment</h4>
+            <p>Knowing your blood has saved a child's life or helped a trauma patient is profoundly uplifting.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-weight"></i></div>
+            <h4>Calorie Burn</h4>
+            <p>Donating 450 ml of blood burns approximately 650 calories — a small bonus for your health.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-icon"><i class="fas fa-certificate"></i></div>
+            <h4>Recognition &amp; Rewards</h4>
+            <p>Regular donors receive certificates, priority care benefits, and recognition in their community.</p>
+          </div>
+        </div>
+      </div>
+      <div class="why-quote">
+        <div class="why-quote-text">
+          "A single donation can make the difference between life and death for someone's mother, child, or friend."
+        </div>
+        <div class="why-quote-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text"><strong>Register online</strong> — fill your basic health details on RaktSeva in 2 minutes.</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text"><strong>Visit a nearby blood bank</strong> — get a mini health check and donate 450 ml in ~10 minutes.</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text"><strong>Rest, eat, and leave</strong> — enjoy a snack provided at the bank and resume normal activities.</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-text"><strong>Repeat every 3 months</strong> — and watch your impact score grow with every life saved.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     BLOOD GROUP COMPATIBILITY GUIDE
+================================================ -->
+<section id="blood-guide">
+  <div class="container">
+    <div class="bg-header">
+      <div class="section-tag">Compatibility Guide</div>
+      <h2 class="section-title">Blood Group Compatibility in India</h2>
+      <p class="section-sub">Understanding which blood groups can donate to or receive from others saves precious time in an emergency.</p>
+    </div>
+    <div class="bg-table-wrap">
+      <table class="bg-table" role="table">
+        <thead>
+          <tr>
+            <th>Blood Group</th>
+            <th>Can Donate To</th>
+            <th>Can Receive From</th>
+            <th>Prevalence in India</th>
+            <th>Current Demand</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="bg-tag">O+</span></td>
+            <td>O+, A+, B+, AB+</td>
+            <td>O+, O-</td>
+            <td>~36%</td>
+            <td style="color:var(--red);font-weight:600;">⬆ Very High</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">O-</span></td>
+            <td>All Blood Groups</td>
+            <td>O- only</td>
+            <td>~7%</td>
+            <td style="color:var(--red);font-weight:600;">⬆⬆ Critical</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">A+</span></td>
+            <td>A+, AB+</td>
+            <td>A+, A-, O+, O-</td>
+            <td>~22%</td>
+            <td style="color:#E67E22;font-weight:600;">→ Moderate</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">A-</span></td>
+            <td>A+, A-, AB+, AB-</td>
+            <td>A-, O-</td>
+            <td>~5%</td>
+            <td style="color:var(--red);font-weight:600;">⬆ High</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">B+</span></td>
+            <td>B+, AB+</td>
+            <td>B+, B-, O+, O-</td>
+            <td>~31%</td>
+            <td style="color:#E67E22;font-weight:600;">→ Moderate</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">B-</span></td>
+            <td>B+, B-, AB+, AB-</td>
+            <td>B-, O-</td>
+            <td>~8%</td>
+            <td style="color:var(--red);font-weight:600;">⬆ High</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">AB+</span></td>
+            <td>AB+ only</td>
+            <td>All Blood Groups</td>
+            <td>~6%</td>
+            <td style="color:#27AE60;font-weight:600;">↓ Low</td>
+          </tr>
+          <tr>
+            <td><span class="bg-tag">AB-</span></td>
+            <td>AB+, AB-</td>
+            <td>AB-, A-, B-, O-</td>
+            <td>~1%</td>
+            <td style="color:var(--red);font-weight:600;">⬆⬆ Critical</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     CALL TO ACTION
+================================================ -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-content">
+      <div class="section-tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)">Join RaktSeva</div>
+      <h2 class="section-title">Be a Hero. Donate Blood Today.</h2>
+      <p class="section-sub">
+        You don't need a cape to save a life. A single visit to your nearest blood bank can give someone another chance. Register now and become part of India's largest voluntary blood donor network.
+      </p>
+      <div class="cta-btns">
+        <a href="#" class="btn btn-primary"><i class="fas fa-user-plus"></i> Register as Donor</a>
+        <a href="#search" class="btn btn-outline"><i class="fas fa-search"></i> Find Blood Bank</a>
+      </div>
+      <div class="cta-stats">
+        <div>
+          <div class="cta-stat-val">30 min</div>
+          <div class="cta-stat-label">Total donation time</div>
+        </div>
+        <div>
+          <div class="cta-stat-val">3 Lives</div>
+          <div class="cta-stat-label">You can save</div>
+        </div>
+        <div>
+          <div class="cta-stat-val">Free</div>
+          <div class="cta-stat-label">Health check included</div>
+        </div>
+        <div>
+          <div class="cta-stat-val">Every 3M</div>
+          <div class="cta-stat-label">Safe repeat interval</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-drop"><span><i class="fas fa-tint"></i></span></div>
+          RaktSeva
+        </a>
+        <p class="footer-desc">
+          RaktSeva is India's dedicated Blood Bank Management System — connecting donors, blood banks, and patients across all 36 states and union territories in real time.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#about"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>About Blood Donation</a></li>
+          <li><a href="#features"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>Platform Features</a></li>
+          <li><a href="#search"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>Find Blood Centers</a></li>
+          <li><a href="#why"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>Why Donate</a></li>
+          <li><a href="#blood-guide"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>Blood Group Guide</a></li>
+          <li><a href="#cta"><i class="fas fa-chevron-right" style="font-size:.7rem;margin-right:6px;color:var(--red)"></i>Register as Donor</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul class="footer-links">
+          <li><a href="#">Eligibility Criteria</a></li>
+          <li><a href="#">Donation FAQs</a></li>
+          <li><a href="#">Blood Safety Standards</a></li>
+          <li><a href="#">NACO Guidelines</a></li>
+          <li><a href="#">eRaktKosh Portal</a></li>
+          <li><a href="#">Thalassaemia &amp; SCD Support</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <!-- Contact -->
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li>
+            <i class="fas fa-map-marker-alt"></i>
+            <span>RaktSeva HQ, Sector 62, NOIDA, Uttar Pradesh – 201309, India</span>
+          </li>
+          <li>
+            <i class="fas fa-phone-alt"></i>
+            <span>Toll Free: 1800-180-1104<br/>+91 98765 43210</span>
+          </li>
+          <li>
+            <i class="fas fa-envelope"></i>
+            <span>support@raktseva.in<br/>emergency@raktseva.in</span>
+          </li>
+          <li>
+            <i class="fas fa-clock"></i>
+            <span>Helpline: 24 × 7<br/>Mon – Sat: 9 AM – 6 PM</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 RaktSeva Blood Bank Management System. All rights reserved. | In association with <a href="#">NACO India</a> &amp; <a href="#">eRaktKosh</a></p>
+      <p>Made with <i class="fas fa-heart" style="color:var(--red)"></i> for India</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Emergency Banner -->
+<div class="emergency-banner" role="button" tabindex="0" onclick="alert('Calling emergency blood helpline: 1800-180-1104')">
+  <i class="fas fa-phone-alt"></i>
+  Emergency Helpline: 1800-180-1104
+</div>
+
+<!-- ================================================
+     JAVASCRIPT
+================================================ -->
+<script>
+  /* ---- Navbar scroll effect ---- */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  /* ---- Mobile menu toggle ---- */
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '68px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'rgba(255,255,255,.97)';
+    links.style.padding = '20px 24px';
+    links.style.boxShadow = '0 8px 24px rgba(0,0,0,.1)';
+    links.style.zIndex = '999';
+    // Fix link colors for mobile
+    links.querySelectorAll('a').forEach(a => a.style.color = '#424242');
+  }
+
+  /* ---- Search results show/hide ---- */
+  function showResults() {
+    const section = document.getElementById('results-section');
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ---- Animated counters ---- */
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-target'), 10);
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current).toLocaleString('en-IN');
+    }, 16);
+  }
+
+  /* ---- Intersection Observer for counters ---- */
+  const counterEls = document.querySelectorAll('.stat-val[data-target]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  counterEls.forEach(el => observer.observe(el));
+
+  /* ---- Fade-in sections on scroll ---- */
+  const fadeEls = document.querySelectorAll('.feature-card, .why-card, .stat-box, .result-card');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, (i % 3) * 80);
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  fadeEls.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    fadeObserver.observe(el);
+  });
+</script>
+</body>
+</html>

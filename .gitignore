@@ -1,0 +1,10 @@
+# Compiled Java files
+*.class
+
+# VS Code
+.vscode/
+
+# OS junk
+.DS_Store
+
+mysql-connector-j-9.6.0.jar
